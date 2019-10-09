@@ -147,13 +147,20 @@ function loadStatsPage(){
 	
 function switchPlayers(playerNum){
 	console.log(playerNum)
-	document.getElementById("g_played").innerHTML = players[playerNum].games_played;
+	var gamesP = players[playerNum].games_played;
+	var pYards = players[playerNum].pass_yards;
+	var rYards = players[playerNum].rushing_yards;
+	var recYards = players[playerNum].receiving_yards;;
+	document.getElementById("g_played").innerHTML = gamesP;
 	document.getElementById("p_year").innerHTML = players[playerNum].year;
 	document.getElementById("p_major").innerHTML = players[playerNum].major;
 	document.getElementById("player_img").src = players[playerNum].img;
-	document.getElementById("p_yards").innerHTML = players[playerNum].pass_yards;
-	document.getElementById("r_yards").innerHTML = players[playerNum].rushing_yards;
-	document.getElementById("rec_yards").innerHTML = players[playerNum].receiving_yards;
+	document.getElementById("p_yards").innerHTML = pYards;
+	document.getElementById("r_yards").innerHTML = rYards;
+	document.getElementById("rec_yards").innerHTML = recYards;
+	document.getElementById("avg_p_yards").innerHTML = Math.round(pYards/gamesP);
+	document.getElementById("avg_r_yards").innerHTML = Math.round(rYards/gamesP);
+	document.getElementById("avg_rec_yards").innerHTML = Math.round(recYards/gamesP);
 }
 
 function loadPlayersPage(){
@@ -164,7 +171,11 @@ function loadPlayersPage(){
 		aTag.setAttribute('href',"#");
 		aTag.setAttribute('id', i);
 		//aTag.setAttribute('onClick', "switchPlayers(i)")
-		aTag.onclick = switchPlayers(i);
+		aTag.onclick = (function(pNum){
+			return function(){
+				switchPlayers(pNum);
+			}
+		})(pNum);
 		aTag.innerText = players[i].name;
 		pDropdown.appendChild(aTag);
 	}
